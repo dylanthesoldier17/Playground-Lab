@@ -1021,7 +1021,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50b38b0c76035bb40ac796a74aedfde0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveFileName: save_file.json
+  saveFileName: leaderboard.json
+  scoreFileName: score.json
   scoreTextObjects:
   - {fileID: 64525842}
   - {fileID: 1876813441}

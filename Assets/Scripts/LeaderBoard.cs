@@ -31,5 +31,6 @@ public class LeaderBoard
     {
         scores[scores.Length - 1] = score;
         Array.Sort(scores);
+        Array.Reverse(scores);
     }
 }

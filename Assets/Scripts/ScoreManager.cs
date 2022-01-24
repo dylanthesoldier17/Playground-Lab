@@ -6,36 +6,63 @@ using UnityEngine.UI;
 public class ScoreManager : MonoBehaviour
 {
     public string saveFileName;
-    private string saveFilePath;
+    public string scoreFileName;
+
     private LeaderBoard leaderBoard;
     public Text[] scoreTextObjects;
 
     private void Awake()
     {
-        saveFilePath = Application.persistentDataPath + "/" + saveFileName;
-        
-        loadFromJson(saveFilePath);
+        int score = LoadScoreFromJsonFile();
+        LoadLeaderboardFromJsonFile();
+        AddScoreToLeaderBoard(score);
+        UpdateScoreTextObjectsFromLeaderboard();
+    }
+
+    private int LoadScoreFromJsonFile()
+    {
+        try
+        {
+            string scoreSavePath = Application.persistentDataPath + "/" + scoreFileName;
+            string json = File.ReadAllText(scoreSavePath);
+            Score score = JsonUtility.FromJson<Score>(json);
+            return score.value;
+        }
+        catch (Exception e)
+        {}
+
+        return 0;
+    }
+
+    private void LoadLeaderboardFromJsonFile()
+    {
+        try
+        {
+            string json = File.ReadAllText(Application.persistentDataPath + "/" + saveFileName);
+            leaderBoard = JsonUtility.FromJson<LeaderBoard>(json);
+        }
+        catch (Exception e)
+        {}
+
         if (leaderBoard == null)
             leaderBoard = new LeaderBoard();
-
-        updateScoreTextObjects();
     }
 
-    public void addToLeaderBoard(int score)
+    public void AddScoreToLeaderBoard(int score)
     {
         leaderBoard.AddScore(score);
-        updateScoreTextObjects();
     }
 
-    private void updateScoreTextObjects()
+    private void UpdateScoreTextObjectsFromLeaderboard()
     {
-        for (int i = 1; i < 6; i++)
+        for (int i = 0; i < 5; i++)
         {
-            scoreTextObjects[i-1].text = $"#{i} - {leaderBoard.GetScore(i).ToString()} coins";
+            int leaderBoardPosition = i + 1;
+            scoreTextObjects[i].text = $"#{i.ToString()} - {leaderBoard.GetScore(i).ToString()} coins";
         }
     }
     
-    public void saveToJson(string path)
+    public void saveLeaderboardToJson(string path)
     {
         string json = JsonUtility.ToJson(leaderBoard);
         if (!Directory.Exists(Application.persistentDataPath))
@@ -43,18 +70,9 @@ public class ScoreManager : MonoBehaviour
         File.WriteAllText(path, json);
     }
 
-    public void loadFromJson(string path)
-    {
-        try
-        {
-            leaderBoard = JsonUtility.FromJson<LeaderBoard>(path);    
-        }catch(Exception exception)
-        {}
-    }
-
     private void OnDestroy()
     {
-        saveToJson(saveFilePath);
+        saveLeaderboardToJson(Application.persistentDataPath + "/" + saveFileName);
     }
 }
 
