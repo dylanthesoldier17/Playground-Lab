@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EndScene.unity
     guid: 67e2555c0cdac99469b48c9990168749
+  - enabled: 1
+    path: Assets/Scenes/HighScore.unity
+    guid: 6f6c4e1199f57544781c17f166fd0998
   m_configObjects: {}
